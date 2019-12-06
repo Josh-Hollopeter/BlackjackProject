@@ -11,6 +11,7 @@ public class Dealing {
 	BlackJackHand computerHand = new BlackJackHand();
 	BlackJackHand playerHand = new BlackJackHand();
 	Scanner input = new Scanner(System.in);
+	private boolean winCondition = true;
 
 	public static void main(String[] args) {
 		Dealing app = new Dealing();
@@ -26,78 +27,59 @@ public class Dealing {
 	}
 
 	public void computerTurn(int playerScore, Deck deck) {
-
-		while (true) {
-			System.out.println("Dealer Turn");
-			if(computerHand.isBust()) {
-				System.out.println("Bust, You win!!");
-			}
-			if(computerHand.isBlackjack() && !playerHand.isBlackjack()) {
-				System.out.println("Dealer wins :(");
-				
-			}
-			if(computerHand.isBlackjack() && playerHand.isBlackjack()) {
-				System.out.println("Tie Game :(");
-				
-			}
+		
+		while (winCondition) {
 			if (computerHand.handSize() == 1) {
+				System.out.println("Dealer Turn");
 				System.out.println("Dealer " + faceDown);
 				computerHand.addCard(faceDown);
 				System.out.println("Dealer " + computerHand.toString());
 				System.out.println("Dealer score " + computerHand.getHandValue());
-				break;
-			}
-			if (computerHand.handSize() == 0) {
+				
+			} else if (computerHand.handSize() == 0) {
+				System.out.println("Dealer Turn");
 				computerHand.addCard(deck.dealCard());
 				System.out.println("Dealer " + computerHand.toString());
 				System.out.println("Dealer score " + computerHand.getHandValue());
 				faceDown = deck.dealCard();
 				playerTurn(deck);
+				break;
 
 			}
-			if(computerHand.getHandValue() < 17){
+
+			if (computerHand.getHandValue() < 17) {
 				computerHand.addCard(deck.dealCard());
-				System.out.println("Dealer score " + computerHand.getHandValue());
 				System.out.println("Dealer " + computerHand.toString());
+				System.out.println("Dealer score " + computerHand.getHandValue());
 				continue;
-				
 			}
-
-
-			break;
+//			if(!winLogic()) {
+//				break;
+//			}
+//			break;
+			this.winCondition = winLogic();
 		}
-		
 	}
 
 	public void playerTurn(Deck deck) {
 
-		int count = 0;
-		while (true) {
-			if(playerHand.isBust()) {
-				System.out.println("Bust, You win!!");
-			}
-			if(playerHand.isBlackjack() && !computerHand.isBlackjack()) {
-				System.out.println("Dealer wins :(");
-				
-			}
-			if(computerHand.isBlackjack() && playerHand.isBlackjack() && computerHand.handSize() > 1) {
-				System.out.println("Tie Game :(");
-				
-			}
-			if (playerHand.handSize() == 0) {
+		while (winCondition) {
+			if (playerHand.isBust()) {
+				System.out.println("You bust, Dealer wins :(");
+			} else if (playerHand.handSize() == 0) {
 				playerHand.addCard(deck.dealCard());
 				System.out.println(playerHand.getHandValue());
 				System.out.println("Player " + playerHand.toString());
 				playerHand.addCard(deck.dealCard());
-				
 
 				System.out.println(playerHand.getHandValue());
 				System.out.println("Player " + playerHand.toString());
 				System.out.println("Player score " + playerHand.getHandValue());
-				computerTurn(playerHand.getHandValue(),deck);
-				
+				computerTurn(playerHand.getHandValue(), deck);
+
 				break;
 			}
+
 			System.out.println("Hit or Stay");
 			String hit = input.nextLine();
 			if (hit.equalsIgnoreCase("Hit")) {
@@ -106,21 +88,44 @@ public class Dealing {
 				System.out.println("Player score " + playerHand.getHandValue());
 				continue;
 
-			}
-			if (hit.equalsIgnoreCase("Stay")) {
-				computerTurn(playerHand.getHandValue(),deck);
+			} else if (hit.equalsIgnoreCase("Stay")) {
+				computerTurn(playerHand.getHandValue(), deck);
 				break;
 			}
 
-			if (count > 21) {
-				System.out.println("Computer Wins");
-				break;
-			}
-			computerTurn(playerHand.getHandValue(),deck);
-			break;
+//			computerTurn(playerHand.getHandValue(), deck);
+//			break;
+
 		}
-		
 		input.close();
+
+	}
+
+	public boolean winLogic() {
+
+		if (computerHand.isBust()) {
+			System.out.println("Dealer bust, You win!!");
+			return false;
+		} else if (computerHand.isBlackjack() && !playerHand.isBlackjack()) {
+			System.out.println("Dealer wins :(");
+			return false;
+
+		} else if (computerHand.getHandValue() == playerHand.getHandValue() && computerHand.getHandValue() >= 17) {
+			System.out.println("Tie Game ");
+			return false;
+
+		} else if (playerHand.isBlackjack() && !computerHand.isBlackjack() && computerHand.getHandValue() >= 17) {
+			System.out.println("Blackjack you win!!");
+			return false;
+		} else if (computerHand.getHandValue() >= 17 && computerHand.getHandValue() > playerHand.getHandValue()) {
+			System.out.println("Dealer wins");
+			return false;
+		} else if (computerHand.getHandValue() >= 17 && !(computerHand.getHandValue() > playerHand.getHandValue())) {
+			System.out.println("You win!!!");
+			return false;
+		}
+
+		return true;
 
 	}
 
