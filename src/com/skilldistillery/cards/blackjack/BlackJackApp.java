@@ -12,6 +12,7 @@ public class BlackJackApp {
 	BlackJackHand playerHand = new BlackJackHand();
 	Scanner input = new Scanner(System.in);
 	private boolean winCondition = true;
+	private Deck deck = new Deck();
 
 	public static void main(String[] args) {
 		BlackJackApp app = new BlackJackApp();
@@ -20,9 +21,8 @@ public class BlackJackApp {
 
 	public void run() {
 
-		Deck deck = new Deck();
 		deck.shuffle();
-		newGame(deck);
+		newGame();
 		System.out.println("Goodbye");
 		input.close();
 	}
@@ -42,7 +42,7 @@ public class BlackJackApp {
 				System.out.println("Dealer " + computerHand.toString());
 				System.out.println("Dealer score " + computerHand.getHandValue());
 				faceDown = deck.dealCard();
-				playerTurn(deck);
+				playerTurn();
 				break;
 			}
 			if (computerHand.getHandValue() < 17) {
@@ -55,7 +55,7 @@ public class BlackJackApp {
 		}
 	}
 
-	public void playerTurn(Deck deck) {
+	public void playerTurn() {
 
 		while (winCondition) {
 			if (playerHand.isBust()) {
@@ -64,11 +64,11 @@ public class BlackJackApp {
 
 			else if (playerHand.handSize() == 0) {
 				playerHand.addCard(deck.dealCard());
-				System.out.println(playerHand.getHandValue());
 				System.out.println("Player " + playerHand.toString());
+				System.out.println("Player score " + playerHand.getHandValue());
+
 				playerHand.addCard(deck.dealCard());
 
-				System.out.println(playerHand.getHandValue());
 				System.out.println("Player " + playerHand.toString());
 				System.out.println("Player score " + playerHand.getHandValue());
 				computerTurn(playerHand.getHandValue(), deck);
@@ -122,29 +122,32 @@ public class BlackJackApp {
 	}
 
 	public void score() {
+		System.out.println("Your final " + playerHand.toString());
+		System.out.println("Dealer final " + computerHand.toString());
 		System.out.println(
 				"Final [Dealer:" + computerHand.getHandValue() + "] [Player: " + playerHand.getHandValue() + "]");
 	}
 
-	public void newGame(Deck deck) {
+	public void newGame() {
 		String playAgain = "yes";
 		while (playAgain.equalsIgnoreCase("yes")) {
-			System.out.println("here");
 			winCondition = true;
 			if (deck.deckSize() <= 25) {
 				deck = new Deck();
 				deck.shuffle();
 			}
-			playerTurn(deck);
+			playerTurn();
 			score();
 			computerHand.clear();
 			playerHand.clear();
-			System.out.println(deck.deckSize());
 			System.out.println("Another round?");
 			playAgain = input.nextLine();
 
 		}
 
+	}
+	public void addCardPrintScore(BlackJackHand hand){
+		
 	}
 
 }

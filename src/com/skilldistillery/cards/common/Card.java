@@ -44,5 +44,8 @@ public class Card {
 	public String toString() {
 		return "Card " + rank + " of " + suit;
 	}
+	public void setValue(int value) {
+		this.rank.setValue(value);
+	}
 
 }

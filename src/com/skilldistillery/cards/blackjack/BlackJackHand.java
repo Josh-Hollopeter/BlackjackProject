@@ -7,6 +7,7 @@ public class BlackJackHand extends Hand {
 	public BlackJackHand() {
 
 	}
+
 	public BlackJackHand(Card card) {
 		super.userHand.add(card);
 	}
@@ -15,9 +16,16 @@ public class BlackJackHand extends Hand {
 		int cardCount = 0;
 		for (Card card : userHand) {
 			cardCount += card.getValue();
-
 		}
-		return cardCount;
+		if (cardCount > 21) {
+			for (Card card : userHand) {
+				if (card.getValue() == 11 && cardCount > 21) {
+					cardCount -= 10;
+				}
+			}
+		}
+	return cardCount;
+
 	}
 
 	public boolean isBust() {
@@ -29,7 +37,9 @@ public class BlackJackHand extends Hand {
 		boolean blackjack = getHandValue() == 21;
 		return blackjack;
 	}
+
 	public int handSize() {
 		return super.userHand.size();
 	}
+
 }
