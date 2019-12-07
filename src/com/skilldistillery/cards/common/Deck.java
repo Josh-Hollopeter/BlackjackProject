@@ -26,6 +26,12 @@ List<Card> cardDeck;
  public Card dealCard() {
 	return cardDeck.remove(0);
  }
+ public int deckSize() {
+	 return cardDeck.size();
+ }
+ public void removeAll() {
+	 cardDeck.removeAll(cardDeck);
+ }
 	 
  }
 
