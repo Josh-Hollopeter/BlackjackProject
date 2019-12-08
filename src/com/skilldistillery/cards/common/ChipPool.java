@@ -8,7 +8,7 @@ public class ChipPool {
 
 	public ChipPool() {
 		this.chips = new ArrayList<>(20);
-		for (int i = 0; i < 5; i++) {
+		for (int i = 0; i < 2; i++) {
 			for (PokerChips v : PokerChips.values()) {
 				chips.add(new Chip(v.getValue(), v.name()));
 				{
