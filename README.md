@@ -7,9 +7,30 @@
 
 
 ### Overview
+* BlackJack game
 
 
-## Concepts Covered
 
+### Topics/Technologies used
+* Java
+* Object Oriented programming
+* Polymorphism (Override)
+* Abstraction
+* Encapsulation
+* Inheritance
+* Loops
+* If statements
+* Regex
+* Exceptions
+* Reading from files
+* Git
+* Terminal
+* Version Control
+* Slack
+* Static vs Non-Static Methods
+* Enumerators
+* Abstract Classes
 
-### How To 
+### How To
+* Follow On Screen Prompts
+* BlackJackAppMVP has the bare minimum requirements

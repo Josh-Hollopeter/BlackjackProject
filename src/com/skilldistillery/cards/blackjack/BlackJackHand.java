@@ -1,6 +1,7 @@
 package com.skilldistillery.cards.blackjack;
 
 import com.skilldistillery.cards.common.Card;
+import com.skilldistillery.cards.common.Hand;
 
 public class BlackJackHand extends Hand {
 
@@ -9,16 +10,16 @@ public class BlackJackHand extends Hand {
 	}
 
 	public BlackJackHand(Card card) {
-		super.userHand.add(card);
+		super.getUserHand().add(card);
 	}
 
 	public int getHandValue() {
 		int cardCount = 0;
-		for (Card card : userHand) {
+		for (Card card : getUserHand()) {
 			cardCount += card.getValue();
 		}
 		if (cardCount > 21) {
-			for (Card card : userHand) {
+			for (Card card : getUserHand()) {
 				if (card.getValue() == 11 && cardCount > 21) {
 					cardCount -= 10;
 				}
@@ -39,7 +40,7 @@ public class BlackJackHand extends Hand {
 	}
 
 	public int handSize() {
-		return super.userHand.size();
+		return super.getUserHand().size();
 	}
 
 }
