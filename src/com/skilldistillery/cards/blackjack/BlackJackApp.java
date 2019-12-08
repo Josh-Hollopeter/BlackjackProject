@@ -14,6 +14,7 @@ import com.skilldistillery.players.ComputerDealer;
 import com.skilldistillery.players.HumanPlayer;
 
 public class BlackJackApp {
+	private int noChips = 0;
 	boolean hasChips = true;
 	private Card faceDown;
 	private HumanPlayer player;
@@ -27,6 +28,7 @@ public class BlackJackApp {
 	private List<Chip> winnings;
 	private Chip chip;
 	private int bet = 0;
+
 	public static void main(String[] args) {
 		BlackJackApp app = new BlackJackApp();
 		app.run();
@@ -41,7 +43,7 @@ public class BlackJackApp {
 
 	public void computerTurn() {
 
-		while (winCondition) {
+		while (winCondition && hasChips) {
 			if (computerHand.handSize() == 1) {
 				System.out.println("Dealer Turn");
 				System.out.println("Dealer " + faceDown);
@@ -68,10 +70,8 @@ public class BlackJackApp {
 	}
 
 	public void playerTurn() {
-		
-		System.out.println("Your Chips");
-		player.printChips();
-		while (winCondition) {
+
+		while (winCondition && hasChips) {
 			if (playerHand.handSize() == 0) {
 				bet = bet();
 				hasChips = placeBet(bet);
@@ -116,12 +116,15 @@ public class BlackJackApp {
 			return false;
 		} else if (!hasChips && player.getChips().size() < dealer.getChips().size() || player.getChips().size() == 0) {
 			System.out.println("Out of chips " + player.getName() + " is thrown out of the casino");
+			noChips++;
 			return false;
-		} else if (!hasChips && player.getChips().size() >= dealer.getChips().size()|| dealer.getChips().size() == 0) {
+		} else if (!hasChips && player.getChips().size() >= dealer.getChips().size() || dealer.getChips().size() == 0) {
 			System.out.println("\u25C8\u25C8\u25C8\u25C8\u25C8\u25C8\u25C8\u25C8\u25C8");
 			System.out.println("Congratulations you've cleaned out the house!!!");
 			System.out.println("You're a world class poker player!!!");
 			System.out.println("\u25C8\u25C8\u25C8\u25C8\u25C8\u25C8\u25C8\u25C8\u25C8");
+			player.addChips(winnings);
+			System.out.println(player.getChips());
 			return false;
 		} else if (computerHand.isBlackjack() && !playerHand.isBlackjack()) {
 			System.out.println("________________");
@@ -178,6 +181,8 @@ public class BlackJackApp {
 		chips = new ChipPool(5);
 		dealer.setChips(chips.getChips());
 		while (playAgain.equalsIgnoreCase("yes")) {
+			System.out.println("Your Chips");
+			player.printChips();
 			winCondition = true;
 			if (deck.deckSize() <= 25) {
 				deck = new Deck();
@@ -187,9 +192,8 @@ public class BlackJackApp {
 			score();
 			computerHand.clear();
 			playerHand.clear();
-			if(!hasChips) {
+			if (!hasChips && noChips == 0) {
 				winLogic();
-				System.out.println("here");
 				break;
 			}
 			System.out.println("Another round? Yes or no");
@@ -206,36 +210,44 @@ public class BlackJackApp {
 		System.out.println("Player score " + hand.getHandValue());
 
 	}
+
 	public int bet() {
-		boolean correctBet = true;
-		while(correctBet) {
-		System.out.println("\nPlace bet");
-		try{
-			bet = Integer.parseInt(input.nextLine());
-			correctBet = false;
-		}
-		catch(NumberFormatException e) {
-			System.out.println("Enter a number");
-		}
+		boolean badBet = true;
+		while (badBet) {
+			System.out.println("\nPlace bet MAX is 25");
+			try {
+				bet = Integer.parseInt(input.nextLine());
+				if (bet <= 25) {
+					badBet = false;
+				} else {
+					continue;
+				}
+			} catch (NumberFormatException e) {
+				System.out.println("Enter a number");
+			}
 		}
 		return bet;
 	}
 
 	public boolean placeBet(int bet) {
+
 		chip = player.getBet(bet);
 		if (chip != null) {
+			System.out.println("Your Chips");
 			winnings.add(chip);
+			player.printChips();
 		} else {
 			return false;
 		}
 		chip = dealer.getBet(bet);
 		if (chip != null) {
 			winnings.add(chip);
+			System.out.println("Dealer matches your bet");
 		} else {
 			return false;
 		}
-		System.out.println("Dealer matches your bet");
-		System.out.println("Prize pool" + winnings);
+		System.out.println("Your Chips");
+
 		return true;
 	}
 

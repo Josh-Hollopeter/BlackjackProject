@@ -2,8 +2,8 @@ package com.skilldistillery.cards.common;
 
 public enum PokerChips {
 	
-BLUE(10), GREY(20), 
-ORANGE(30), BLACK(50);
+BLUE(10), GREY(15), 
+ORANGE(20), BLACK(25);
 	
 	 private int value;
 	 private String color;
