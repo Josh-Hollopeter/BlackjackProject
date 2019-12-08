@@ -1,6 +1,7 @@
 package com.skilldistillery.cards.blackjack;
 
 import java.util.ArrayList;
+import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
 
@@ -13,7 +14,7 @@ import com.skilldistillery.players.ComputerDealer;
 import com.skilldistillery.players.HumanPlayer;
 
 public class BlackJackApp {
-	boolean outOfChips = true;
+	boolean hasChips = true;
 	private Card faceDown;
 	private HumanPlayer player;
 	private ComputerDealer dealer;
@@ -25,7 +26,7 @@ public class BlackJackApp {
 	private Deck deck = new Deck();
 	private List<Chip> winnings;
 	private Chip chip;
-
+	private int bet = 0;
 	public static void main(String[] args) {
 		BlackJackApp app = new BlackJackApp();
 		app.run();
@@ -67,44 +68,30 @@ public class BlackJackApp {
 	}
 
 	public void playerTurn() {
-		int bet = 0;
+		
 		System.out.println("Your Chips");
 		player.printChips();
 		while (winCondition) {
-			if (playerHand.isBust()) {
-				System.out.println("You bust, Dealer wins :(");
-			}
-
-			else if (playerHand.handSize() == 0) {
-				System.out.println("Place bet");
-				bet = input.nextInt();
-				outOfChips = placeBet(bet);
-				playerHand.addCard(deck.dealCard());
-				System.out.println("Player " + playerHand.toString());
-				System.out.println("Player score " + playerHand.getHandValue());
-
-				playerHand.addCard(deck.dealCard());
-
-				System.out.println("Player " + playerHand.toString());
-				System.out.println("Player score " + playerHand.getHandValue());
+			if (playerHand.handSize() == 0) {
+				bet = bet();
+				hasChips = placeBet(bet);
+				addCardPrintScore(playerHand);
+				addCardPrintScore(playerHand);
 				computerTurn();
 				break;
 			}
+
 			System.out.println("\nHit or Stay");
 			String hit = input.nextLine();
 			if (hit.equalsIgnoreCase("Hit")) {
-				System.out.println("Place bet");
-				bet = input.nextInt();
-				outOfChips = placeBet(bet);
-				playerHand.addCard(deck.dealCard());
-				System.out.println("Player " + playerHand.toString());
-				System.out.println("Player score " + playerHand.getHandValue());
+				bet = bet();
+				hasChips = placeBet(bet);
+				addCardPrintScore(playerHand);
 				this.winCondition = winLogic();
 				continue;
 			} else if (hit.equalsIgnoreCase("Stay")) {
-				System.out.println("Place bet");
-				bet = input.nextInt();
-				outOfChips = placeBet(bet);
+				bet = bet();
+				hasChips = placeBet(bet);
 				computerTurn();
 				break;
 			}
@@ -127,10 +114,10 @@ public class BlackJackApp {
 			dealer.addChips(winnings);
 			winnings.removeAll(winnings);
 			return false;
-		} else if (!outOfChips && player.getChips().size() < dealer.getChips().size()) {
-			System.out.println("Out of chips "+ player.getName() + " is thrown out of the casino");
+		} else if (!hasChips && player.getChips().size() < dealer.getChips().size() || player.getChips().size() == 0) {
+			System.out.println("Out of chips " + player.getName() + " is thrown out of the casino");
 			return false;
-		} else if (!outOfChips && player.getChips().size() >= dealer.getChips().size()) {
+		} else if (!hasChips && player.getChips().size() >= dealer.getChips().size()|| dealer.getChips().size() == 0) {
 			System.out.println("\u25C8\u25C8\u25C8\u25C8\u25C8\u25C8\u25C8\u25C8\u25C8");
 			System.out.println("Congratulations you've cleaned out the house!!!");
 			System.out.println("You're a world class poker player!!!");
@@ -184,11 +171,11 @@ public class BlackJackApp {
 		System.out.println("Enter your name");
 		String name = input.nextLine();
 		winnings = new ArrayList<Chip>();
-		chips = new ChipPool();
+		chips = new ChipPool(2);
 		player = new HumanPlayer(name);
 		dealer = new ComputerDealer("Dealer");
 		player.setChips(chips.getChips());
-		chips = new ChipPool();
+		chips = new ChipPool(5);
 		dealer.setChips(chips.getChips());
 		while (playAgain.equalsIgnoreCase("yes")) {
 			winCondition = true;
@@ -200,8 +187,14 @@ public class BlackJackApp {
 			score();
 			computerHand.clear();
 			playerHand.clear();
-			System.out.println("Another round?");
+			if(!hasChips) {
+				winLogic();
+				System.out.println("here");
+				break;
+			}
+			System.out.println("Another round? Yes or no");
 			playAgain = input.nextLine();
+			continue;
 
 		}
 
@@ -209,14 +202,27 @@ public class BlackJackApp {
 
 	public void addCardPrintScore(BlackJackHand hand) {
 		hand.addCard(deck.dealCard());
-		System.out.println(hand.toString());
+		System.out.println("Player " + hand.toString());
 		System.out.println("Player score " + hand.getHandValue());
 
+	}
+	public int bet() {
+		boolean correctBet = true;
+		while(correctBet) {
+		System.out.println("\nPlace bet");
+		try{
+			bet = Integer.parseInt(input.nextLine());
+			correctBet = false;
+		}
+		catch(NumberFormatException e) {
+			System.out.println("Enter a number");
+		}
+		}
+		return bet;
 	}
 
 	public boolean placeBet(int bet) {
 		chip = player.getBet(bet);
-		player.printChips();
 		if (chip != null) {
 			winnings.add(chip);
 		} else {
@@ -228,10 +234,8 @@ public class BlackJackApp {
 		} else {
 			return false;
 		}
-		System.out.println("dealer");
 		System.out.println("Dealer matches your bet");
 		System.out.println("Prize pool" + winnings);
-		input.nextLine();
 		return true;
 	}
 

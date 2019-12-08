@@ -6,9 +6,9 @@ import java.util.List;
 public class ChipPool {
 	List<Chip> chips;
 
-	public ChipPool() {
-		this.chips = new ArrayList<>(20);
-		for (int i = 0; i < 2; i++) {
+	public ChipPool(int poolSize) {
+		this.chips = new ArrayList<>(poolSize*4);
+		for (int i = 0; i < poolSize; i++) {
 			for (PokerChips v : PokerChips.values()) {
 				chips.add(new Chip(v.getValue(), v.name()));
 				{

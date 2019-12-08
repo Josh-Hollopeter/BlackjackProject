@@ -47,36 +47,40 @@ public abstract class Player {
 	}
 
 	public Chip getBet(int bet) {
-		if (bet <= -1){
+		if (bet <= -1) {
 			return null;
-			
+
 		}
 		if (chips.size() > 0) {
 			int count = 0;
-			Chip previous = chips.get(1);
+			Chip previous = chips.get(0);
+			if (chips.size() > 1) {
+				previous = chips.get(0);
+			}else if (chips.size() == 0){
+				return null;
+			}
 			for (Chip chip : chips) {
 				if (chip.getValue() == bet) {
 					return chips.remove(chips.indexOf(chip));
-					
 				}
-				count ++;
+				count++;
 			}
-			if(count >= chips.size()) {
-			for (Chip chip : chips) {
-				 if (chip.getValue() > bet) {
-					return chips.remove(chips.indexOf(chip));
-				} else if (chip.getValue() + previous.getValue() >= bet) {
-					chips.remove(chip);
-					chips.remove(previous);
-					chip.setValue(bet);
-					chip.setColor("HOUSE RED");
-					return chip;
+			if (count >= chips.size()) {
+				for (Chip chip : chips) {
+					if (chip.getValue() > bet) {
+						return chips.remove(chips.indexOf(chip));
+					} else if (chip.getValue() + previous.getValue() >= bet) {
+						chips.remove(chip);
+						chips.remove(previous);
+						chip.setValue(bet);
+						chip.setColor("HOUSE RED");
+						return chip;
+					}
+					previous = chip;
 				}
-				previous = chip;
-			}
 			}
 		}
-		System.out.println(this.name + "No more chips of that size");
+		System.out.println(this.name + " No more chips of that size");
 		return null;
 	}
 
