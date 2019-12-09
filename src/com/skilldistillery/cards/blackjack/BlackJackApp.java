@@ -10,8 +10,8 @@ import com.skilldistillery.cards.common.Card;
 import com.skilldistillery.cards.common.Chip;
 import com.skilldistillery.cards.common.ChipPool;
 import com.skilldistillery.cards.common.Deck;
-import com.skilldistillery.players.ComputerDealer;
-import com.skilldistillery.players.HumanPlayer;
+import com.skilldistillery.cards.players.ComputerDealer;
+import com.skilldistillery.cards.players.HumanPlayer;
 
 public class BlackJackApp {
 	private int noChips = 0;

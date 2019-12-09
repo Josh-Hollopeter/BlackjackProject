@@ -1,4 +1,4 @@
-package com.skilldistillery.players;
+package com.skilldistillery.cards.players;
 
 import java.util.Comparator;
 import java.util.List;
@@ -53,9 +53,8 @@ public abstract class Player {
 			Comparator<Chip> comp = new ChipComparator();
 			chips.sort(comp);
 			Chip previous = chips.get(0);
-			if(chips.size() == 1) {
+			if (chips.size() == 1) {
 				return chips.remove(0);
-				
 			}
 			if (chips.size() > 1) {
 				previous = chips.get(1);
@@ -71,8 +70,8 @@ public abstract class Player {
 			if (count >= chips.size()) {
 				for (Chip chip : chips) {
 					if (chip.getValue() > bet) {
-						int value = chip.getValue() -bet;
-						Chip remainder = new Chip(value,"HOUSE YELLOW");
+						int value = chip.getValue() - bet;
+						Chip remainder = new Chip(value, "HOUSE YELLOW");
 						this.chips.add(remainder);
 						return chips.remove(chips.indexOf(chip));
 					} else if (chip.getValue() + previous.getValue() >= bet) {
@@ -82,8 +81,8 @@ public abstract class Player {
 						chips.remove(previous);
 						chip.setValue(bet);
 						chip.setColor("HOUSE RED");
-						Chip remainder = new Chip(Math.abs(value1 + value2-bet),"HOUSE YELLOW");
-						if(remainder.getValue() > 0 && remainder.getValue() > (bet - chip.getValue())) {
+						Chip remainder = new Chip(Math.abs(value1 + value2 - bet), "HOUSE YELLOW");
+						if (remainder.getValue() > 0 && remainder.getValue() > (bet - chip.getValue())) {
 							this.chips.add(remainder);
 						}
 						return chip;

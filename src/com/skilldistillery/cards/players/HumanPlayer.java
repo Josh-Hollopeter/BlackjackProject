@@ -1,4 +1,4 @@
-package com.skilldistillery.players;
+package com.skilldistillery.cards.players;
 
 import java.util.List;
 
