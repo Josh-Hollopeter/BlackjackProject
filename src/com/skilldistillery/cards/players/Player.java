@@ -90,6 +90,9 @@ public abstract class Player {
 					previous = chip;
 				}
 			}
+		}else if(bet == 0) {
+			System.out.println("Nice try");
+			return null;
 		}
 		System.out.println(this.name + " No more chips of that size");
 		return null;
