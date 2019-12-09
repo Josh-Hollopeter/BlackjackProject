@@ -29,6 +29,18 @@ List<Card> cardDeck;
  public int deckSize() {
 	 return cardDeck.size();
  }
+ public void printShuffledDeck() {
+		int count = 0;
+		this.shuffle();
+		for (Card card : this.cardDeck) {
+			System.out.print(card);
+			count++;
+			if (count % 8 == 0) {
+				System.out.println();
+			}
+
+		}
+	}
  public void removeAll() {
 	 cardDeck.removeAll(cardDeck);
  }

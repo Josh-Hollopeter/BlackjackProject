@@ -21,8 +21,9 @@ public class BlackJackAppMVP {
 	}
 
 	public void run() {
-
+		
 		Deck deck = new Deck();
+//		deck.printShuffledDeck(); this will print shuffled deck
 		deck.shuffle();
 		playerTurn(deck);
 		score();
