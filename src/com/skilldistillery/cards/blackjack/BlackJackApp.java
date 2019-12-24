@@ -114,7 +114,7 @@ public class BlackJackApp {
 			dealer.addChips(winnings);
 			winnings.removeAll(winnings);
 			return false;
-		} else if (!hasChips && player.getChips().size() < dealer.getChips().size() || player.getChips().size() == 0) {
+		} else if (noChips == 0 & !hasChips && player.getChips().size() < dealer.getChips().size() || player.getChips().size() == 0) {
 			System.out.println("Out of chips " + player.getName() + " is thrown out of the casino");
 			noChips++;
 			return false;
@@ -156,6 +156,8 @@ public class BlackJackApp {
 			player.addChips(winnings);
 			winnings.removeAll(winnings);
 			return false;
+		}else if(noChips > 0) {
+			return false;
 		}
 
 		return true;
@@ -173,12 +175,25 @@ public class BlackJackApp {
 		String playAgain = "yes";
 		System.out.println("Enter your name");
 		String name = input.nextLine();
+		System.out.println("Select difficulty level 5 - 10");
+		String levelString = input.nextLine();
+		int level;
+		try {
+			level = Integer.parseInt(levelString);
+		}catch(NumberFormatException n) {
+			System.out.println("Invalid selection difficulty set automatically");
+			level = 5;
+		}
+		if(level < 5) {
+			level =5;
+		}
+		System.out.println("Difficulty set to " + level);
 		winnings = new ArrayList<Chip>();
 		chips = new ChipPool(2);
 		player = new HumanPlayer(name);
 		dealer = new ComputerDealer("Dealer");
 		player.setChips(chips.getChips());
-		chips = new ChipPool(5);
+		chips = new ChipPool(level);
 		dealer.setChips(chips.getChips());
 		while (playAgain.equalsIgnoreCase("yes")) {
 			System.out.println("Your Chips");
@@ -192,13 +207,15 @@ public class BlackJackApp {
 			score();
 			computerHand.clear();
 			playerHand.clear();
-			if (!hasChips && noChips == 0) {
-				winLogic();
-				break;
-			}
+			winCondition = winLogic();
+			if (!winCondition) {
+				playAgain = "no";
+				continue;
+			}else if(hasChips) {
 			System.out.println("Another round? Yes or no");
 			playAgain = input.nextLine();
 			continue;
+			}
 
 		}
 
@@ -232,7 +249,7 @@ public class BlackJackApp {
 	public boolean placeBet(int bet) {
 
 		chip = player.getBet(bet);
-		if (chip != null) {
+		if (chip != null & player.getChips().size() > 0) {
 			System.out.println("Your Chips");
 			winnings.add(chip);
 			player.printChips();
@@ -240,7 +257,7 @@ public class BlackJackApp {
 			return false;
 		}
 		chip = dealer.getBet(bet);
-		if (chip != null) {
+		if (chip != null & dealer.getChips().size() > 0) {
 			winnings.add(chip);
 			System.out.println("Dealer matches your bet");
 		} else {
