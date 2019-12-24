@@ -35,4 +35,4 @@
 
 ### How To
 * Follow On Screen Prompts
-* BlackJackAppMVP has the bare minimum requirements
+* BlackJackApp runs the game
