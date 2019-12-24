@@ -54,6 +54,9 @@ public abstract class Player {
 			chips.sort(comp);
 			Chip previous = chips.get(0);
 			if (chips.size() == 1) {
+				if(bet < previous.getValue()){
+				Chip remainder = new Chip(previous.getValue() - bet, "House Green");
+				chips.add(remainder);}
 				return chips.remove(0);
 			}
 			if (chips.size() > 1) {
@@ -90,7 +93,7 @@ public abstract class Player {
 					previous = chip;
 				}
 			}
-		}else if(bet == 0) {
+		} else if (bet == 0) {
 			System.out.println("Nice try");
 			return null;
 		}

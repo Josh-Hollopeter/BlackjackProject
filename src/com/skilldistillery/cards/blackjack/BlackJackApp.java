@@ -263,7 +263,6 @@ public class BlackJackApp {
 		} else {
 			return false;
 		}
-		System.out.println("Your Chips");
 
 		return true;
 	}
